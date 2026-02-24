@@ -1,0 +1,84 @@
+name: Data Pipeline & Database Verification
+
+on:
+  #push:
+    #branches: [ "CICD_Testing" ]
+  workflow_dispatch:
+    inputs:
+      min_github_followers:
+        description: 'Minimum GitHub Followers'
+        required: false
+        default: '0'
+      min_stackoverflow_reputation:
+        description: 'Minimum StackOverflow Reputation'
+        required: false
+        default: '0'
+      max_leetcode_rank:
+        description: 'Maximum LeetCode Rank'
+        required: false
+        default: '10000000'
+
+permissions:
+  contents: write
+
+jobs:
+  Update-Data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.DATA_COLLECTOR_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+        working-directory: ./
+
+      - name: Run Data Collectors
+        env:
+          GITHUB_TOKEN: ${{ secrets.DATA_COLLECTOR_TOKEN }}
+          MIN_GITHUB_FOLLOWERS: ${{ inputs.min_github_followers }}
+          MIN_STACKOVERFLOW_REPUTATION: ${{ inputs.min_stackoverflow_reputation }}
+          MAX_LEETCODE_RANK: ${{ inputs.max_leetcode_rank }}
+        run: |
+          cd code/Data_Collectors
+          python simple_github_collector.py
+          # python leetcode_collector.py # Uncomment if reate-limit available
+          # python stackoverflow_collector.py # Uncomment if rate-limit available
+        # Note: If running multiple commands, ensure non-zero exit code stops execution if needed.
+        # But here we want all to run if possible, or proceed. Default is fail-fast for `run`.
+
+      - name: Run Selection Algorithm
+        env:
+          MPLBACKEND: Agg
+        run: |
+          cd code/ML/Selection_Algorithms
+          python github_selection_algo.py
+          python LeetCode_Selection_algo.py
+          python StackOverFlow_Selection_algo.py
+
+      - name: Run Database Ingestion
+        run: |
+          cd code/database
+          python database.py
+          cd ../backend
+          python setup_db.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add code/Profile_Data/ code/database/
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Pipeline: Data Collection + ML + Database Ingestion [skip ci]"
+            git push
+          fi

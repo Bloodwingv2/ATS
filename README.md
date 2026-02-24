@@ -4,7 +4,7 @@
 In the following project, we have built a basic ATS (Applicant Tracking System) that can be used by recruiters to find suitable candidates for a job opening. The ATS is built using Python and uses various API's to collect data from different sources (Github, leetcode, Stackoverflow) and then use machine learning algorithms to find the best candidates for a job opening. The entire CI/CD Pipeline is supplemented by Github Actions and its UI/UX has been created via Streamlit, further complemented by a Robust FastAPI backend to connect our UI/UX to our SQL lite database. Providing a seamless experience for recruiters to find suitable candidates for a job opening while keeping them in the loop.
 
 # Demo Video
-[Demo Video](https://drive.google.com/file/d/1HetH6fcVtkEV6-ELXB0Fpc2kAZBvF476/view?usp=sharing)
+Watch the full system demo here: [Demo Video](https://drive.google.com/file/d/1HetH6fcVtkEV6-ELXB0Fpc2kAZBvF476/view?usp=sharing)
  
 # Recruiter View
 

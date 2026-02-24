@@ -52,7 +52,7 @@ if csv_path.exists():
     print(f"Successfully converted to Excel!")
     print(f"Dataset: {df.shape}") # (20000, 7)
     print(f"\nColumns: {list(df.columns)}")
-    display(df.head()) # Shows the first 5 rows in the formatted table
+    print(df.head()) # Shows the first 5 rows in the formatted table
 else:
     print(f"Error: Could not find {csv_path}")
 

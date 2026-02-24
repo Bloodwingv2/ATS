@@ -122,8 +122,8 @@ def trigger_workflow(token, owner, repo, workflow_id, inputs):
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json"
     }
-    # Targeting CICD_Testing branch as requested
-    data = {"ref": "CICD_Testing", "inputs": inputs}
+    # Targeting main branch as requested
+    data = {"ref": "main", "inputs": inputs}
     
     try:
         response = requests.post(url, headers=headers, json=data)

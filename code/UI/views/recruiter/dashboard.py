@@ -287,10 +287,9 @@ def render_recruiter_dashboard():
             unsafe_allow_html=True
         )
         # Repository Details (Hardcoded for Recruiter View)
-        repo_owner = "Big-Data-Programming"
-        repo_name = "bdp-oct25-exam-bdp_oct25_group7"
+        repo_owner = "Bloodwingv2"
+        repo_name = "ATS"
             
-
         # Try to load token from env, otherwise ask user
         default_token = os.environ.get("GITHUB_TOKEN", "")
         
